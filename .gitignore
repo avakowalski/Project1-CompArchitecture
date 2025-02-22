@@ -1,0 +1,7 @@
+*-project1.tar.gz
+.direnv
+.vim/coc-settings.json
+cachesim
+compile_commands.json
+test_results
+.ccls-cache/
