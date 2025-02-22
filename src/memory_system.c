@@ -129,13 +129,16 @@ struct cache_line *cache_system_find_cache_line(struct cache_system *cache_syste
     //each set has multiple lines and by using associativity it will tell us how many 
     // set_indx* will jump to the first line of the correct set 
     int set_start = set_idx * cache_system->associativity;
+
     // pointer to the first cache line within the set 
     struct cache_line *set = &cache_system->cache_lines[set_start];
 
     //loop through all lines in the set 
     for (int i = 0; i < cache_system->associativity; i++) {
+
         //does the line contain valid data and does it have the same tag as the requested mem address
         if (set[i].status != INVALID && set[i].tag == tag) {
+            
             //here we are returning a pointer to the cache line, bc both conditions are met so cache hit !!
             return &set[i]; 
         }
