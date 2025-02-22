@@ -17,11 +17,11 @@ struct cache_system *cache_system_new(uint32_t line_size, uint32_t sets, uint32_
     // TODO: calculate the index bits, offset bits and tag bits.
     
     //identify the set in which the chache line is stored 
-    cs->index_bits = 0;
+    cs->index_bits = (uint32_t)log2(sets);
     //identify the byte within a cache line 
-    cs->offset_bits = 0;
+    cs->offset_bits = (uint32_t)log2(line_size);
     //identify which block of memory is stored 
-    cs->tag_bits = 0;
+    cs->tag_bits = 32 - (cs->offset_bits + cs->index_bits);
 
     cs->offset_mask = 0xffffffff >> (32 - cs->offset_bits);
     cs->set_index_mask = 0xffffffff >> cs->tag_bits;
@@ -120,10 +120,27 @@ int cache_system_mem_access(struct cache_system *cache_system, uint32_t address,
     return 0;
 }
 
+//this function helps speed up memory access by checking if the data is alr in the cache
+//prevents slow memory fetches and works w other cache functions to track hit/ misses 
 struct cache_line *cache_system_find_cache_line(struct cache_system *cache_system, uint32_t set_idx,
                                                 uint32_t tag)
 {
-    // TODO Return a pointer to the cache line within the given set that has
-    // the given tag. If no such element exists, then return NULL.
-    return NULL;
+    //finding where the set will start within the cache_lines array bc the cache is stored as one big list 
+    //each set has multiple lines and by using associativity it will tell us how many 
+    // set_indx* will jump to the first line of the correct set 
+    int set_start = set_idx * cache_system->associativity;
+    // pointer to the first cache line within the set 
+    struct cache_line *set = &cache_system->cache_lines[set_start];
+
+    //loop through all lines in the set 
+    for (int i = 0; i < cache_system->associativity; i++) {
+        //does the line contain valid data and does it have the same tag as the requested mem address
+        if (set[i].status != INVALID && set[i].tag == tag) {
+            //here we are returning a pointer to the cache line, bc both conditions are met so cache hit !!
+            return &set[i]; 
+        }
+    }
+    // if it doesnt get a cache hit then it will return a miss, telling the system that its not in cache so it will fetch from mem 
+    return NULL; 
+
 }
