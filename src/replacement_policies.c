@@ -58,7 +58,9 @@ struct replacement_policy *lru_replacement_policy_new(uint32_t sets, uint32_t as
 void rand_cache_access(struct replacement_policy *replacement_policy,
                        struct cache_system *cache_system, uint32_t set_idx, uint32_t tag)
 {
-    // TODO update the RAND replacement policy state given a new memory access
+    // RAND does NOT track accesses, so this function does nothing.
+    return;
+
 }
 
 uint32_t rand_eviction_index(struct replacement_policy *replacement_policy,
