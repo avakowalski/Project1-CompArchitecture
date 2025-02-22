@@ -70,8 +70,18 @@ uint32_t rand_eviction_index(struct replacement_policy *replacement_policy,
 
 void rand_replacement_policy_cleanup(struct replacement_policy *replacement_policy)
 {
-    // TODO cleanup any additional memory that you allocated in the
-    // rand_replacement_policy_new function.
+    // avoid freeing null pointers 
+    if (replacement_policy == NULL) {
+        return; 
+    }
+
+    // free additional data if it was allocated (not needed if NULL)
+    if (replacement_policy->data != NULL) {
+        free(replacement_policy->data);
+    }
+
+    // free the replacement policy structure itself
+    free(replacement_policy);
 }
 
 struct replacement_policy *rand_replacement_policy_new(uint32_t sets, uint32_t associativity)
