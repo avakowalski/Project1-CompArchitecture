@@ -23,6 +23,12 @@ struct cache_system;
 // form:
 //
 //      return_type (*function_name)(list of arguments)
+
+//define the lru_metadata so its avavilible in replacement_polices.c
+struct lru_metadata{
+    //stores the lru ordering for each set 
+    uint32_t **lru_list;
+};
 struct replacement_policy {
     // This function is called when a set is full but a new cache line needs to
     // be added to the set.
