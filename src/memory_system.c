@@ -51,6 +51,7 @@ void cache_system_cleanup(struct cache_system *cache_system)
     free(cache_system->replacement_policy);
 }
 
+
 int cache_system_mem_access(struct cache_system *cache_system, uint32_t address, char rw)
 {
     cache_system->stats.accesses++;

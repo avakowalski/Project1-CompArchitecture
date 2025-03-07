@@ -9,9 +9,10 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <time.h>
+#include "memory_system.h"
 
 struct cache_system;
-#include "memory_system.h"
+
 
 // This struct describes the functionality of a replacement policy. The
 // function pointers describe the three functions that every replacement policy
@@ -28,6 +29,7 @@ struct cache_system;
 struct lru_metadata{
     //stores the lru ordering for each set 
     uint32_t **lru_list;
+    uint32_t num_sets;
 };
 struct replacement_policy {
     // This function is called when a set is full but a new cache line needs to
@@ -74,5 +76,4 @@ struct replacement_policy *lru_replacement_policy_new(uint32_t sets, uint32_t as
 struct replacement_policy *rand_replacement_policy_new(uint32_t sets, uint32_t associativity);
 struct replacement_policy *lru_prefer_clean_replacement_policy_new(uint32_t sets,
                                                                    uint32_t associativity);
-
 #endif
